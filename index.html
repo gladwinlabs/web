@@ -31,10 +31,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="preload" href="assets/fonts/nunito-normal-700-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/nunito-sans-normal-400-700.woff2" as="font" type="font/woff2" crossorigin>
 
 <script type="application/ld+json">
 {
@@ -95,6 +95,32 @@
 </script>
 
 <style>
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(assets/fonts/jetbrains-mono-normal-400-500.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url(assets/fonts/nunito-normal-700-900.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(assets/fonts/nunito-sans-normal-400-700.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
   :root {
     /* Brand colours from the logo: slate #3C4352 and gold #EBB919 */
     --slate: #3C4352;
@@ -139,8 +165,23 @@
   nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 26px; }
   nav a { color: var(--text-2); font-weight: 600; font-size: 15px; transition: color .2s; }
   nav a:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
   .nav .btn { padding: 10px 16px; font-size: 14px; }
-  @media (max-width: 720px) { nav ul { display: none; } .brand img { height: 34px; } }
+  .menu-btn { display: none; width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--line-strong); background: transparent; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 0; }
+  .menu-btn span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; transition: transform .2s, opacity .2s; }
+  .skip { position: absolute; left: 16px; top: -60px; z-index: 30; padding: 10px 14px; border-radius: 8px; background: var(--gold); color: var(--gold-ink); font-weight: 700; }
+  .skip:focus { top: 12px; }
+  @media (max-width: 720px) {
+    .brand img { height: 34px; }
+    .menu-btn { display: flex; }
+    header nav ul { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; gap: 0; background: var(--bg-2); border-bottom: 1px solid var(--line); padding: 4px clamp(18px, 4vw, 40px) 12px; box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+    header.open nav ul { display: flex; }
+    header nav a { display: block; padding: 13px 0; font-size: 17px; border-bottom: 1px solid var(--line); }
+    header nav li:last-child a { border-bottom: 0; }
+    header.open .menu-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    header.open .menu-btn span:nth-child(2) { opacity: 0; }
+    header.open .menu-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
 
   .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 999px; font-family: var(--display); font-weight: 800; font-size: 15px; border: 1px solid transparent; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s, border-color .2s; }
   .btn:hover { transform: translateY(-2px); }
@@ -259,11 +300,12 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <header>
   <div class="wrap nav">
     <a class="brand" href="#top" aria-label="Gladwin Labs home"><img src="assets/wordmark-dark.png" alt="Gladwin Labs" width="1389" height="444" fetchpriority="high"></a>
-    <nav aria-label="Primary">
+    <nav aria-label="Primary" id="site-nav">
       <ul>
         <li><a href="#services">Services</a></li>
         <li><a href="#approach">How we work</a></li>
@@ -272,11 +314,14 @@
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
-    <a class="btn btn-gold" href="#contact">Start a project</a>
+    <div class="nav-right">
+      <a class="btn btn-gold" href="#contact">Start a project</a>
+      <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
 
-<main>
+<main id="main">
 <section class="hero" id="top" aria-labelledby="hero-title">
   <canvas id="field" aria-hidden="true"></canvas>
   <img class="hero-mark" src="assets/logo-dark.png" alt="" aria-hidden="true" width="700" height="700">
@@ -474,6 +519,16 @@
     }
     tick(); setInterval(tick, 1000);
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    var hdr = document.querySelector('header'), btn = document.getElementById('menu-btn');
+    function setMenu(open) {
+      hdr.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    btn.addEventListener('click', function () { setMenu(!hdr.classList.contains('open')); });
+    hdr.querySelectorAll('nav a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
 
     var canvas = document.getElementById('field');
     var ctx = canvas.getContext('2d');
