@@ -8,6 +8,7 @@
 <meta name="keywords" content="software development company Chennai, web application development Chennai, mobile app development Chennai, custom software development India, cloud and DevOps services, API development, AI integration">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Gladwin Labs">
+<meta name="copyright" content="Gladwin Labs. All rights reserved.">
 <meta name="theme-color" content="#171B24">
 <link rel="canonical" href="https://gladwinlabs.com/">
 
@@ -458,7 +459,7 @@
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
-    <span>&copy; 2026 Gladwin Labs</span>
+    <span>&copy; <span id="year">2026</span> Gladwin Labs. All rights reserved.</span>
   </div>
 </footer>
 
@@ -472,6 +473,7 @@
       el.setAttribute('datetime', now.toISOString());
     }
     tick(); setInterval(tick, 1000);
+    document.getElementById('year').textContent = new Date().getFullYear();
 
     var canvas = document.getElementById('field');
     var ctx = canvas.getContext('2d');
